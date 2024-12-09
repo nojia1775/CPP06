@@ -3,28 +3,33 @@
 # define SCALARCONVERTER_HPP
 
 # include <iostream>
+# include <string>
+# include <cstdlib>
+# include <cmath>
+# include <cctype>
+# include <limits>
+# include <iomanip>
 
 class	ScalarConverter
 {
 	private:
-		char			*_nbrc;
-		double			*_nbrd;
-		float			*_nbrf;
-		int			*_nbri;
-
 					ScalarConverter(void);
 					~ScalarConverter(void);
 
 					ScalarConverter(const ScalarConverter& other);
 		ScalarConverter&	operator=(const ScalarConverter& other);
 
-		bool			isInt(const std::string str) const;
-		bool			isChar(const std::string str) const;
-		bool			isFloat(const std::string str) const;
-		bool			isDouble(const std::string str) const;
+		static bool		isInt(const std::string str);
+		static bool		isChar(const std::string str);
+		static bool		isFloat(const std::string str);
+		static bool		isDouble(const std::string str);
+		static void		printChar(double &nbr);
+		static void		printInt(double &nbr);
+		static void		printFloat(double &nbr);
+		static void		printDouble(double &nbr);
 
 	public:
-		static void		convert(const std::string str);
+		static void		convert(const std::string& str);
 };
 
 #endif

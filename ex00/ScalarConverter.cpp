@@ -1,24 +1,16 @@
 #include "ScalarConverter.hpp"
 
-ScalarConverter::ScalarConverter(void) : _nbrc(NULL), _nbrd(NULL), _nbrf(NULL), _nbri(NULL)
+ScalarConverter::ScalarConverter(void)
 {
 	return;
 }
 
 ScalarConverter::~ScalarConverter(void)
 {
-	if (_nbrc)
-		delete _nbrc;
-	if (_nbrd)
-		delete _nbrd;
-	if (_nbrf)
-		delete _nbrf;
-	if (_nbri)
-		delete _nbri;
 	return;
 }
 
-ScalarConverter::ScalarConverter(const ScalarConverter& other) : _nbrc(other._nbrc), _nbrd(other._nbrd), _nbrf(other._nbrf), _nbri(other._nbri)
+ScalarConverter::ScalarConverter(const ScalarConverter& other)
 {
 	(void)other;
 }
@@ -29,7 +21,7 @@ ScalarConverter&	ScalarConverter::operator=(const ScalarConverter& other)
 	return *this;
 }
 
-bool	ScalarConverter::isChar(const std::string str) const
+bool	ScalarConverter::isChar(const std::string str)
 {
 	if (str.size() != 1)
 		return false;
@@ -38,21 +30,164 @@ bool	ScalarConverter::isChar(const std::string str) const
 	return true;
 }
 
-bool	ScalarConverter::isInt(const std::string str) const
+bool	ScalarConverter::isInt(const std::string str)
 {
 	if (str.size() < 1 || str.size() > 11)
 		return false;
-	for (int i = 0 ; i < str.size() ; i++)
-		if (!isdigit(str[i]))
+	for (std::string::const_iterator it = str.begin() ; it != str.end() ; ++it)
+	{
+		if (it != str.begin() && (*it == '-' || *it == '+'))
 			return false;
+		if (*it != '-' && *it != '+' && !isdigit(*it))
+			return false;
+	}
 	return true;
 }
 
-bool	ScalarConverter::isDouble(const std::string str) const
+bool	ScalarConverter::isDouble(const std::string str)
 {
-	if (str == "inf" || str == "nan")
-	{
+	int count_dot = 0;
+	if (str == "+inf" || str == "-inf" || str == "nan")
 		return true;
+	if (str[str.size() - 1] == '.')
+		return false;
+	for (std::string::const_iterator it = str.begin() ; it != str.end() ; ++it)
+	{
+		if (it != str.begin() && (*it == '-' || *it == '+'))
+			return false;
+		if (*it == '.')
+			count_dot++;
+		if (*it != '-' && *it != '+' && *it != '.' && !isdigit(*it))
+			return false;
 	}
-	
+	if (count_dot != 1)
+		return false;
+	return true;
+}
+
+bool	ScalarConverter::isFloat(const std::string str)
+{
+	int count_dot = 0;
+	int count_f = 0;
+	if (str == "-inff" || str == "-inff" || str == "nanf")
+		return true;
+	if (str[str.size() - 1] == '.')
+		return false;
+	for (std::string::const_iterator it = str.begin() ; it != str.end() ; ++it)
+	{
+		if (it != str.begin() && (*it == '-' || *it == '+'))
+			return false;
+		if (*it == '.')
+			count_dot++;
+		if (*it == 'f')
+			count_f++;
+		if (isdigit(*it) && count_f)
+			return false;
+		if (*it != '-' && *it != '+' && *it != '.' && *it != 'f' && !isdigit(*it))
+			return false;
+	}
+	if (count_dot != 1 || count_f != 1)
+		return false;
+	return true;
+}
+
+// void	ScalarConverter::convert(const std::string str)
+// {
+// 	int type = 0;
+// 	char nbrChar = 0;
+// 	int nbrInt = 0;
+// 	float nbrFloat = 0;
+// 	double nbrDouble = 0;
+// 	type += isChar(str) * 1;
+// 	type += isInt(str) * 10;
+// 	type += isFloat(str) * 100;
+// 	type += isDouble(str) * 1000;
+// 	switch (type)
+// 	{
+// 		case 1:
+// 			nbrChar = str[0];
+// 			nbrInt = static_cast<int>(nbrChar);
+// 			nbrFloat = static_cast<float>(nbrChar);
+// 			nbrDouble = static_cast<double>(nbrChar);
+// 			break;
+// 		case 10:
+// 			break;
+// 		case 100:
+// 			break;
+// 		case 1000:
+// 			break;
+// 		default:
+// 			std::cout << "Not a number\n";
+// 			break;
+// 	}
+// }
+
+void	ScalarConverter::convert(const std::string& str)
+{
+	double value;
+	char *tmp = NULL;
+	int type = 0;
+	type += isChar(str);
+	type += isInt(str);
+	type += isFloat(str);
+	type += isDouble(str);
+	if (!type)
+	{
+		std::cout << "Not a number\n";
+		return;
+	}
+	if (str.size() == 1)
+		value = static_cast<double>(str[0]);
+	else
+		value = std::strtod(str.c_str(), &tmp);
+	printChar(value);
+	printInt(value);
+	printFloat(value);
+	printDouble(value);
+}
+
+void	ScalarConverter::printChar(double &nbr)
+{
+	if (std::isnan(nbr) || std::isinf(nbr) || nbr < std::numeric_limits<char>::min() || nbr > std::numeric_limits<char>::max())
+		std::cout << "char : impossible\n";
+	else if (!std::isprint(static_cast<char>(nbr)))
+		std::cout << "char : Non displayable\n";
+	else
+		std::cout << "char : '" << static_cast<char>(nbr) << "'\n";
+}
+
+void	ScalarConverter::printInt(double &nbr)
+{
+	if (std::isnan(nbr) || std::isinf(nbr) || nbr < std::numeric_limits<int>::min() || nbr > std::numeric_limits<int>::max())
+		std::cout << "int : impossible\n";
+	else
+		std::cout << "int : " << static_cast<int>(nbr) << "\n";
+}
+
+void	ScalarConverter::printFloat(double &nbr)
+{
+	if (nbr == std::numeric_limits<float>::infinity())
+		std::cout << "float : +inff\n";
+	else if (nbr == -std::numeric_limits<float>::infinity())
+		std::cout << "float : -inff\n";
+	else if (std::isnan(nbr))
+		std::cout << "float : nanf\n";
+	else if (nbr / static_cast<int>(nbr) == 1)
+		std::cout << "float : " << static_cast<float>(nbr) << ".0f\n";
+	else
+		std::cout << "float : " << static_cast<float>(nbr) << "f\n";
+}
+
+void	ScalarConverter::printDouble(double &nbr)
+{
+	if (nbr == std::numeric_limits<double>::infinity())
+		std::cout << "double : +inf\n";
+	else if (nbr == -std::numeric_limits<double>::infinity())
+		std::cout << "double : -inf\n";
+	else if (std::isnan(nbr))
+		std::cout << "double : nan\n";
+	else if (nbr / static_cast<int>(nbr) == 1)
+		std::cout << "double : " << static_cast<float>(nbr) << ".0\n";
+	else
+		std::cout << "double : " << nbr << "\n";
 }
