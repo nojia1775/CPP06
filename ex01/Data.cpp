@@ -22,15 +22,16 @@ Data::Data(const Data& other) : _name(other._name), _data(other._data)
 
 Data&	Data::operator=(const Data& other)
 {
+	(void)other;
 	return *this;
 }
 
-const int	Data::getData(void) const
+int	Data::getData(void) const
 {
 	return _data;
 }
 
-const std::string	Data::getName(void) const
+std::string	Data::getName(void) const
 {
 	return _name;
 }

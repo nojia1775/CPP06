@@ -18,8 +18,8 @@ class	Data
 					Data(const Data& other);
 		Data&			operator=(const Data& other);
 
-		const int		getData(void) const;
-		const std::string	getName(void) const;
+		int			getData(void) const;
+		std::string		getName(void) const;
 };
 
 #endif

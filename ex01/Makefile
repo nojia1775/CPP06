@@ -2,8 +2,9 @@ CC = c++
 
 CFLAGS = -Wall -Wextra -Werror -std=c++98 -g -MMD
 
-SRCS =	ScalarConverter.cpp \
-	main.cpp
+SRCS =	Serializer.cpp \
+	main.cpp \
+	Data.cpp
 
 OBJ_DIR = obj
 
@@ -11,7 +12,7 @@ OBJS = $(patsubst %.cpp, $(OBJ_DIR)/%.o, $(SRCS))
 
 DEPS = $(OBJS:.o=.d)
 
-NAME = convert
+NAME = serializer
 
 $(OBJ_DIR)/%.o: %.cpp
 	mkdir -p $(OBJ_DIR)
