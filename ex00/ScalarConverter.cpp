@@ -1,19 +1,10 @@
 #include "ScalarConverter.hpp"
 
-ScalarConverter::ScalarConverter(void)
-{
-	return;
-}
+ScalarConverter::ScalarConverter(void) {}
 
-ScalarConverter::~ScalarConverter(void)
-{
-	return;
-}
+ScalarConverter::~ScalarConverter(void) {}
 
-ScalarConverter::ScalarConverter(const ScalarConverter& other)
-{
-	(void)other;
-}
+ScalarConverter::ScalarConverter(const ScalarConverter& other) { (void)other; }
 
 ScalarConverter&	ScalarConverter::operator=(const ScalarConverter& other)
 {
@@ -69,7 +60,7 @@ bool	ScalarConverter::isFloat(const std::string str)
 {
 	int count_dot = 0;
 	int count_f = 0;
-	if (str == "-inff" || str == "-inff" || str == "nanf")
+	if (str == "-inff" || str == "+inff" || str == "nanf")
 		return true;
 	if (str[str.size() - 1] == '.')
 		return false;
@@ -91,41 +82,9 @@ bool	ScalarConverter::isFloat(const std::string str)
 	return true;
 }
 
-// void	ScalarConverter::convert(const std::string str)
-// {
-// 	int type = 0;
-// 	char nbrChar = 0;
-// 	int nbrInt = 0;
-// 	float nbrFloat = 0;
-// 	double nbrDouble = 0;
-// 	type += isChar(str) * 1;
-// 	type += isInt(str) * 10;
-// 	type += isFloat(str) * 100;
-// 	type += isDouble(str) * 1000;
-// 	switch (type)
-// 	{
-// 		case 1:
-// 			nbrChar = str[0];
-// 			nbrInt = static_cast<int>(nbrChar);
-// 			nbrFloat = static_cast<float>(nbrChar);
-// 			nbrDouble = static_cast<double>(nbrChar);
-// 			break;
-// 		case 10:
-// 			break;
-// 		case 100:
-// 			break;
-// 		case 1000:
-// 			break;
-// 		default:
-// 			std::cout << "Not a number\n";
-// 			break;
-// 	}
-// }
-
 void	ScalarConverter::convert(const std::string& str)
 {
 	double value;
-	char *tmp = NULL;
 	int type = 0;
 	type += isChar(str);
 	type += isInt(str);
@@ -137,17 +96,25 @@ void	ScalarConverter::convert(const std::string& str)
 		return;
 	}
 	if (str.size() == 1)
+	{
+		REGLE LE PROBLEME
 		value = static_cast<double>(str[0]);
+		double tmp = std::atoi(&str[0]);
+		printChar(tmp);
+		value = str[0] - '0';
+	}
 	else
-		value = std::strtod(str.c_str(), &tmp);
-	printChar(value);
+	{
+		value = std::strtod(str.c_str(), NULL);
+		printChar(value);
+	}
 	printInt(value);
 	printFloat(value);
 	printDouble(value);
 }
 
 void	ScalarConverter::printChar(double &nbr)
-{
+{ 
 	if (std::isnan(nbr) || std::isinf(nbr) || nbr < std::numeric_limits<char>::min() || nbr > std::numeric_limits<char>::max())
 		std::cout << "char : impossible\n";
 	else if (!std::isprint(static_cast<char>(nbr)))
@@ -172,7 +139,7 @@ void	ScalarConverter::printFloat(double &nbr)
 		std::cout << "float : -inff\n";
 	else if (std::isnan(nbr))
 		std::cout << "float : nanf\n";
-	else if (nbr / static_cast<int>(nbr) == 1)
+	else if (nbr == 0 || nbr / static_cast<int>(nbr) == 1)
 		std::cout << "float : " << static_cast<float>(nbr) << ".0f\n";
 	else
 		std::cout << "float : " << static_cast<float>(nbr) << "f\n";
@@ -186,7 +153,7 @@ void	ScalarConverter::printDouble(double &nbr)
 		std::cout << "double : -inf\n";
 	else if (std::isnan(nbr))
 		std::cout << "double : nan\n";
-	else if (nbr / static_cast<int>(nbr) == 1)
+	else if (nbr == 0 || nbr / static_cast<int>(nbr) == 1)
 		std::cout << "double : " << static_cast<float>(nbr) << ".0\n";
 	else
 		std::cout << "double : " << nbr << "\n";
