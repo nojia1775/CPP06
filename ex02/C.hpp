@@ -7,7 +7,7 @@
 class	C : public Base
 {
 	public:
-			C(void) {};
+			C(void) : Base() {};
 			~C(void) {};
 };
 
