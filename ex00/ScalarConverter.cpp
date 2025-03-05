@@ -94,7 +94,7 @@ bool	ScalarConverter::isFloat(const std::string str)
 void	ScalarConverter::convert(const std::string& str)
 {
 	double value;
-	if (!isChar(str) && !isInt(str) && !isFloat(str) && isDouble(str))
+	if (!isChar(str) && !isInt(str) && !isFloat(str) && !isDouble(str))
 	{
 		std::cout << "Not a number\n";
 		return;
@@ -135,7 +135,7 @@ void	ScalarConverter::printFloat(double &nbr)
 		std::cout << "float : -inff\n";
 	else if (std::isnan(nbr))
 		std::cout << "float : nanf\n";
-	else if (nbr / static_cast<int>(nbr) == 1)
+	else if (nbr == 0 || nbr / static_cast<int>(nbr) == 1)
 		std::cout << "float : " << static_cast<float>(nbr) << ".0f\n";
 	else
 		std::cout << "float : " << static_cast<float>(nbr) << "f\n";
@@ -149,7 +149,7 @@ void	ScalarConverter::printDouble(double &nbr)
 		std::cout << "double : -inf\n";
 	else if (std::isnan(nbr))
 		std::cout << "double : nan\n";
-	else if (nbr / static_cast<int>(nbr) == 1)
+	else if (nbr == 0 || nbr / static_cast<int>(nbr) == 1)
 		std::cout << "double : " << static_cast<float>(nbr) << ".0\n";
 	else
 		std::cout << "double : " << nbr << "\n";
