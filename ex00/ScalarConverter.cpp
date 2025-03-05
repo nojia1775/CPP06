@@ -32,11 +32,15 @@ bool	ScalarConverter::isChar(const std::string str)
 
 bool	ScalarConverter::isInt(const std::string str)
 {
-	if (str.size() < 1 || str.size() > 11)
+	const char *tmp = str.c_str();
+	while (*tmp == '0')
+		tmp++;
+	std::string newStr(tmp);
+	if (newStr.size() < 1 || newStr.size() > 11)
 		return false;
-	for (std::string::const_iterator it = str.begin() ; it != str.end() ; ++it)
+	for (std::string::const_iterator it = newStr.begin() ; it != newStr.end() ; ++it)
 	{
-		if (it != str.begin() && (*it == '-' || *it == '+'))
+		if (it != newStr.begin() && (*it == '-' || *it == '+'))
 			return false;
 		if (*it != '-' && *it != '+' && !isdigit(*it))
 			return false;
