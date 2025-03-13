@@ -33,7 +33,7 @@ bool	ScalarConverter::isChar(const std::string str)
 bool	ScalarConverter::isInt(const std::string str)
 {
 	const char *tmp = str.c_str();
-	while (*tmp == '0')
+	while (*tmp == '0' && *(tmp + 1) && *(tmp + 1) == '0')
 		tmp++;
 	std::string newStr(tmp);
 	if (newStr.size() < 1 || newStr.size() > 11)
